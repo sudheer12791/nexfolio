@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST() {
   return NextResponse.json({
-    success: true,
-    result: "AI is temporarily disabled.",
+    hasKey: !!process.env.OPENAI_API_KEY,
+    keyPrefix: process.env.OPENAI_API_KEY?.substring(0, 7) || "NO_KEY",
   });
 }

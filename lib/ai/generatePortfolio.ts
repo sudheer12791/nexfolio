@@ -1,9 +1,13 @@
 import OpenAI from "openai";
 
 export async function generatePortfolio(data: any) {
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+  const apiKey = process.env.OPENAI_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("OPENAI_API_KEY is missing.");
+  }
+
+  const openai = new OpenAI({ apiKey });
 
   const prompt = `
 Create a professional portfolio for:
@@ -14,15 +18,10 @@ Projects: ${data.projects}
 Experience: ${data.experience}
 `;
 
-  const response = await openai.chat.completions.create({
+  const response = await openai.responses.create({
     model: "gpt-4.1-mini",
-    messages: [
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
+    input: prompt,
   });
 
-  return response.choices[0].message.content;
+  return response.output_text;
 }
